@@ -65,6 +65,15 @@ export class AuthenticationService {
     }, { merge:true });
   }
 
+  getUsers(){
+    return new Promise<any>((resolve, reject) => {
+      this.afStore.collection('./users').snapshotChanges()
+      .subscribe(snapshots => {
+        resolve(snapshots)
+      })
+    })
+  }
+
 
 
 }

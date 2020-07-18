@@ -8,23 +8,21 @@
 <ion-content>
 
   <div class="main_content_div">
-   
-
-    <div class="card_div2" *ngFor="let item of data">
+    <div class="card_div2" *ngFor="let item of items">
       <div class="tymbooker_image" 
-        [style.backgroundImage]="'url(' +item.photoUrl+ ')'"></div>
+      [style.backgroundImage]="'url(' +item.photoUrl+ ')'"></div>   
    
-
-
-
+  
+  
+  
       <div style="padding-left: 10px;">
-        <ion-label class="tymbooker_name">{{item.title}}</ion-label>
-        <ion-label class="date">{{item.description}}</ion-label>
-        <ion-label class="date">{{item.price}}</ion-label>
+        <!-- <img [src] = "item.photoUrl"> -->
+        <ion-label class="tymbooker_name">Title : {{item.title}}</ion-label><br>
+        <ion-label class="date">Description : {{item.description}}</ion-label><br>
+        <ion-label class="date">Price : {{item.price}}</ion-label>
       
       </div>
     </div>
-
   </div>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addNewListing()">
     <ion-fab-button color="secondary">

@@ -10,13 +10,17 @@ import { tap, finalize } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { DataAccessService } from 'src/app/services/data-access.service';
+import { PhotoService } from '../../services/photo.service';
+
 @Component({
   selector: 'app-my-listings-add',
   templateUrl: './my-listings-add.page.html',
   styleUrls: ['./my-listings-add.page.scss'],
 })
 export class MyListingsAddPage implements OnInit {
-
+  files = [];
+  uploadProgress = 0;
+  photos = this.photoService.photos;
   listing_form: FormGroup;
   user; 
   photo: SafeResourceUrl = "../../assets/image/user.png";
@@ -54,8 +58,14 @@ export class MyListingsAddPage implements OnInit {
     public alertCtrl: AlertController,
     public actionCtrl:ActionSheetController,
     private storage: AngularFireStorage, 
-    private dataSvc:DataAccessService
-  ) { 
+    private dataSvc:DataAccessService,
+    public photoService : PhotoService,
+    
+  
+  ) 
+    
+  { 
+    
     this.isUploading = false;
     this.isUploaded = false;
 
@@ -88,6 +98,7 @@ export class MyListingsAddPage implements OnInit {
         role: 'destructive',
         cssClass: 'buttonCss',
         handler: () => {
+          //this.photoService.addNewToGallery();
           this.takeProfilePic(this.camera.PictureSourceType.CAMERA);
           console.log('Take a picture clicked');
         }
@@ -110,7 +121,10 @@ export class MyListingsAddPage implements OnInit {
     await action.present();
   }
 
+  
+
   async takeProfilePic(sourceType) {
+    
     const options: CameraOptions = {
       quality: 25,
       destinationType: this.camera.DestinationType.DATA_URL,
@@ -121,14 +135,14 @@ export class MyListingsAddPage implements OnInit {
     }
 
 
-
     this.camera.getPicture(options).then((imageData) => {
+      
       // imageData is either a base64 encoded string or a file URI
       // If it's base64 (DATA_URL):
       let base64Image = imageData;
       this.profilePhoto = base64Image;
       this.uploadFile(base64Image);
-      //console.log(this.photo)
+      console.log(this.photo);
     }, (err) => {
       // Handle error
       console.log(err)
@@ -213,19 +227,22 @@ export class MyListingsAddPage implements OnInit {
 
   onClickSave(){
     console.log(this.downloadUrl)
+    console.log("Okkkkk")
+    let time = new Date();
     if(this.downloadUrl){
       let listing ={
         title:this.listing_form.value.title,
         description:this.listing_form.value.description,
         price:this.listing_form.value.price, 
-        photoUrl: this.downloadUrl
+        photoUrl: this.downloadUrl,
+        date: time 
       }
       console.log(this.user.uid, listing)
       this.dataSvc.addListing(this.user.uid, listing).then(()=>{
         this.util.toast('Listing has been successfully added!', 'success', 'bottom');
       })
       .catch(err => {
-        //console.log(err);
+        console.log(err);
         this.util.errorToast('Error in adding listing. Please try again!');
       })
     

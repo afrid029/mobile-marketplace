@@ -1,0 +1,82 @@
+.main_content_div{
+    width: 100%;
+    padding: 20px;
+
+    ion-label {
+        display: block;
+    }
+    .header_lbl{
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .card_div2{
+
+        border-radius: 10px;
+        box-shadow: 0px 3px 6px rgba(0,0,0,0.2);
+        margin-top: 15px;
+        position: relative;
+
+
+        padding-top:10px;
+        padding-left:10px;
+
+        display: flex;
+        flex-direction: row;
+        height: 120px;
+        .tymbooker_image{
+            height: 100px;
+            width: 100px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        .tymbooker_name{
+            color: var(--ion-color-secondary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .date{
+            font-size: 16px;
+        }
+        .pending{
+            color: #f05e23;
+            font-weight: 600;
+        }
+        .accepted{
+            color: green;
+            font-weight: 600;
+        }
+        .canceled{
+            color: red;
+            font-weight: 600;
+        }
+        .new{
+            color: var(--ion-color-secondary);
+            font-weight: 600;
+        }
+        .price{
+            position: absolute;
+            right: 0;
+            top: 0;
+            background: var(--ion-color-secondary);
+            padding: 5px 10px;
+            color: white;
+            font-weight: 600;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;         
+        }
+    }
+
+}
+
+.ioncontent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+  }

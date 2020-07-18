@@ -4,7 +4,32 @@
     <ion-title>Home</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-
+  <ion-toolbar> 
+    <!-- <ion-button *ngIf="toggleSearchBtn" (click)="searchEmployee(employee)">Search</ion-button> -->
+    <ion-searchbar
+    [(ngModel)]="myInput"
+    [showCancelButton]="focus"
+    (ionInput)="onInput($event)"
+    (ionCancel)="onCancel($event)">
+    </ion-searchbar>
+    
+  </ion-toolbar>
+  
+  <div class="main_content_div">
+    <div class="card_div2" *ngFor="let item of items">
+      <div class="tymbooker_image" 
+      [style.backgroundImage]="'url(' +item.photoUrl+ ')'"></div>   
+   
+  
+  
+  
+      <div style="padding-left: 10px;">
+        <ion-label class="tymbooker_name">Title : {{item.title}}</ion-label><br>
+        <ion-label class="date">Description : {{item.description}}</ion-label><br>
+        <ion-label class="date">Price : {{item.price}}</ion-label><br>
+      
+      </div>
+    </div>
+  </div>
 </ion-content>
