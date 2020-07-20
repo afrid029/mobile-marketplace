@@ -18,12 +18,8 @@
   <div class="main_content_div">
     <div class="card_div2" *ngFor="let item of items">
       <div class="tymbooker_image" 
-      [style.backgroundImage]="'url(' +item.photoUrl+ ')'"></div>   
-   
-  
-  
-  
-      <div style="padding-left: 10px;">
+      [style.backgroundImage]="'url(' +item.photoUrl+ ')'"></div> 
+ <div style="padding-left: 10px;">
         <ion-label class="tymbooker_name">Title : {{item.title}}</ion-label><br>
         <ion-label class="date">Description : {{item.description}}</ion-label><br>
         <ion-label class="date">Price : {{item.price}}</ion-label><br>
