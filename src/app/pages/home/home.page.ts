@@ -54,7 +54,7 @@ export class HomePage implements OnInit {
       })
     }
     getListings(key){
-      return this.afs.collection<any>(`users/all/listings`,ref=> ref.where('title','==',key)).valueChanges();
+      return this.afs.collection<any>(`users/all/listings`,ref=> ref.orderBy("title").startAt(key)).valueChanges();
     }
   ngOnInit() {
   }

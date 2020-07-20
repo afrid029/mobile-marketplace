@@ -31,5 +31,10 @@ value;
     
    
   }
+  getProfile(uid){
+    
+    return this.afs.collection(`users/${uid}/profile`).valueChanges();
+  }
+ 
    
 }

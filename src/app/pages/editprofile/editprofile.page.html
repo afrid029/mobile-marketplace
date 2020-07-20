@@ -1,0 +1,43 @@
+<ion-header>
+    <ion-toolbar color="secondary">
+      <ion-buttons slot="start">
+        <ion-back-button mode="md" text=""></ion-back-button>
+      </ion-buttons>
+    <ion-title style= "text-align: center; font-weight: bolder;">Edit Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+        <div class="main_content_div">
+          <div class="div_form">
+            <div class="tymbookerThumb" [style.backgroundImage]="'url(' + downloadUrl + ')'">
+            </div>
+            <ion-button expand="block" (click)="openActionsheet()" fill="clear" size="small">
+        
+              Update Profile Picture
+             </ion-button>
+             <div *ngIf="percentage | async as pct">
+               Progress: {{ pct | number }}%
+               <ion-progress-bar value="{{ pct / 100 }}"></ion-progress-bar>
+             </div>
+            <form [formGroup]="profile_form">
+              <ion-label>First Name: </ion-label>
+              <ion-input type="text"  formControlName="fname" placeholder="First Name (Don't Leave Empty)" required></ion-input>
+              <ion-label>Last Name: </ion-label>
+              <ion-input type="text" formControlName="lname"  placeholder="Last Name (Don't Leave Empty)"  required></ion-input>
+              <ion-label> Phone Number: </ion-label>
+              <ion-input type="number"  formControlName="phone" placeholder="Phone Number (Don't Leave Empty) " required ></ion-input>
+              
+               <ion-button (click)="onClickUpdate()"  expand="block">
+                 Update
+               </ion-button>
+            </form>
+          </div>
+        </div>
+      
+      
+  
+    
+  
+
+</ion-content>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable, Injector, Query } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { AngularFireUploadTask, AngularFireStorage } from '@angular/fire/storage';
@@ -11,17 +11,18 @@ import * as firebase from 'firebase/app';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { DataAccessService } from 'src/app/services/data-access.service';
 import { PhotoService } from '../../services/photo.service';
-
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
 @Component({
-  selector: 'app-my-listings-add',
-  templateUrl: './my-listings-add.page.html',
-  styleUrls: ['./my-listings-add.page.scss'],
+  selector: 'app-editprofile',
+  templateUrl: './editprofile.page.html',
+  styleUrls: ['./editprofile.page.scss'],
 })
-export class MyListingsAddPage implements OnInit {
-
+export class EditprofilePage implements OnInit {
+  
   uploadProgress = 0;
-  listing_form: FormGroup;
-  user; 
+  profile_form: FormGroup;
+  user : firebase.User; 
   photo: SafeResourceUrl = "../../assets/image/user.png";
   profilePhoto: string;
   downloadUrl: string;
@@ -47,8 +48,16 @@ export class MyListingsAddPage implements OnInit {
     //Status check 
     isUploading:boolean;
     isUploaded:boolean;
+
   
+  states = [];
+  profiles : Array<any>;
+  userId;
+
+  updated;
+ 
   constructor(
+    
     private authSvc:AuthenticationService,
     private util:UtilService,
     private formBuilder:FormBuilder,
@@ -59,37 +68,43 @@ export class MyListingsAddPage implements OnInit {
     private storage: AngularFireStorage, 
     private dataSvc:DataAccessService,
     public photoService : PhotoService,
-    
-  
-  ) 
-    
-  { 
-    
-    this.isUploading = false;
-    this.isUploaded = false;
-
-    this.listing_form = this.formBuilder.group({
+    public afs : AngularFirestore,
+    public router : Router,
+    ) { 
       
-      title: new FormControl('', Validators.compose([
-        Validators.required,
-      ])),
-      description: new FormControl('', Validators.compose([
-        Validators.required
-      ])),
-      price: new FormControl('', Validators.compose([
-        Validators.required
-      ])),
-    });
-
-    this.authSvc.getUser().subscribe(user => {
-     this.user = user; 
-   
-    });
-  }
+      this.isUploading = false;
+      this.isUploaded = false;
+      this.authSvc.getUser().subscribe(user => {
+        this.user = user; 
+        this.dataSvc.getProfile (this.userId).subscribe(ref=>{
+          this.profiles = ref;
+          
+        })
+      
+       });
+    }
 
   ngOnInit() {
+    this.userId = firebase.auth().currentUser.uid;
+    this.profile_form = this.formBuilder.group({
+      
+      fname: new FormControl('',Validators.compose([
+        Validators.required,
+        Validators.pattern("^[a-zA-Z0-9_.+-]$")
+    
+      ])),
+      lname: new FormControl('',Validators.compose([
+        Validators.required,
+        Validators.pattern("^[a-zA-Z0-9_.+-]$")
+       
+      ])),
+      phone: new FormControl('',Validators.compose([
+        Validators.required,
+        Validators.pattern("^[0-9]{10}$")
+      ])),
+    });
   }
-
+ 
   async openActionsheet() {
     const action = await this.actionCtrl.create({
       buttons: [{
@@ -222,35 +237,57 @@ export class MyListingsAddPage implements OnInit {
     }
     return   new Blob(byteArrays, {type: contentType});
   }
+  
 
-
-  onClickSave(){
+ 
+  onClickUpdate(){
     console.log(this.downloadUrl)
-    console.log("Okkkkk")
+    console.log(this.user.uid)
     let time = new Date();
-    if(this.downloadUrl){
-      let listing ={
-        title:this.listing_form.value.title,
-        description:this.listing_form.value.description,
-        price:this.listing_form.value.price, 
-        photoUrl: this.downloadUrl,
-        date: time 
-      }
-      console.log(this.user.uid, listing)
-      this.dataSvc.addListing(this.user.uid, listing).then(()=>{
-        this.util.toast('Listing has been successfully added!', 'success', 'bottom');
-      })
-      .catch(err => {
+   
+      if(this.downloadUrl){
+        let listing ={
+          fname:this.profile_form.value.fname,
+          lname:this.profile_form.value.lname,
+          phone:this.profile_form.value.phone,
+          photoUrl: this.downloadUrl,
+          //date: time 
+        }
+        console.log(this.user.uid, listing);
+        this.updateProf(this.user.uid, listing).then(()=>{
+         this.util.toast('Profile Is Successfully Updated', 'success', 'bottom');
+         this.router.navigate['profile'];
+       })
+       .catch(err => {
         console.log(err);
         this.util.errorToast('Error in adding listing. Please try again!');
       })
+      }else{
+        let listing ={
+          fname:this.profile_form.value.fname,
+          lname:this.profile_form.value.lname,
+          phone:this.profile_form.value.phone,
+          photoUrl: "assets/icon/favicon.png"
+          //date: time 
+        }
+        console.log(this.user.uid, listing);
+        this.updateProf(this.user.uid, listing).then(()=>{
+         this.util.toast('Profile Is Successfully Updated', 'success', 'bottom');
+         //this.router.navigate(['profile']);
+       })
+       .catch(err => {
+        console.log(err);
+        this.util.errorToast('Error in adding listing. Please try again!');
+      })
+      }
+      
     
+   
+    }  
+  updateProf(uid,list){
+  
+    return this.afs.doc<any>(`users/${uid}`).update(list);
     }
-    else{
-      this.util.errorToast('Please upload image before saving!');
-
-    }
-  }
-
 
 }
+

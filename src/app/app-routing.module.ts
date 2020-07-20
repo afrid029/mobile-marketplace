@@ -26,7 +26,16 @@ const routes: Routes = [
   {
     path: 'add-listing',
     loadChildren: () => import('./pages/my-listings-add/my-listings-add.module').then( m => m.MyListingsAddPageModule)
+  },
+  {
+    path: 'editprofile',
+    loadChildren: () => import('./pages/editprofile/editprofile.module').then( m => m.EditprofilePageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./pages/profile/profile.module').then(m=> m.ProfilePageModule)
   }
+
 ];
 @NgModule({
   imports: [
